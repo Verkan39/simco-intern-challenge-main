@@ -11,3 +11,9 @@ Then I check independence with classical probability rules for pairs and then in
 
 EXPECTATION:
 I expect to see P(A∩B) = P(A)·P(B) the equality holding nearly true. If that happens I am in a state of doubt whether this is actual relation or is this another noise considered as relation. If the equality isnt holding true, I am sure they are independent.
+
+RAN label_probabilities.py
+
+RESULT & CONCLUSION :
+The result is stored in result_test1.txt.
+So my idea failed at this point, not completely, but partially. we computed values of p(A), p(A and B), p(A and B and C) across all available cominations, and we can check independence of combinations easily, but rather that checking independence of combinations, I am more concerened about independence of "price", "channel" and "entrant_message". Now I first though of using p-values with Chi-Square, but that doesnt work because for that we need to assume two rows to be independent, which they clearly are not. 
