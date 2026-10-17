@@ -1,0 +1,73 @@
+visits.csv: 1200 rows, 253 entrant sales
+
+P(A)
+  price=3.49                                               159  0.133
+  price=4.49                                               116  0.097
+  price=5.49                                                81  0.068
+  sum for price                                            356  0.297
+  channel=online                                           181  0.151
+  channel=retail                                           161  0.134
+  sum for channel                                          342  0.285
+  message=(blank)                                           45  0.037
+  message=cleaning                                         114  0.095
+  message=environment                                      124  0.103
+  message=low_odor                                          88  0.073
+  sum for message                                          371  0.309
+
+P(A and B)
+  price=3.49 and channel=online                            101  0.084
+  price=3.49 and channel=retail                             85  0.071
+  price=4.49 and channel=online                             66  0.055
+  price=4.49 and channel=retail                             67  0.056
+  price=5.49 and channel=online                             55  0.046
+  price=5.49 and channel=retail                             27  0.022
+  sum for price x channel                                  401  0.334
+  price=3.49 and message=(blank)                            25  0.021
+  price=3.49 and message=cleaning                           51  0.043
+  price=3.49 and message=environment                        77  0.064
+  price=3.49 and message=low_odor                           49  0.041
+  price=4.49 and message=(blank)                            15  0.013
+  price=4.49 and message=cleaning                           46  0.038
+  price=4.49 and message=environment                        37  0.031
+  price=4.49 and message=low_odor                           38  0.032
+  price=5.49 and message=(blank)                             5  0.004
+  price=5.49 and message=cleaning                           30  0.025
+  price=5.49 and message=environment                        34  0.028
+  price=5.49 and message=low_odor                           14  0.012
+  sum for price x message                                  421  0.351
+  channel=online and message=(blank)                        15  0.013
+  channel=online and message=cleaning                       66  0.055
+  channel=online and message=environment                    88  0.073
+  channel=online and message=low_odor                       61  0.051
+  channel=retail and message=(blank)                        30  0.025
+  channel=retail and message=cleaning                       61  0.051
+  channel=retail and message=environment                    52  0.043
+  channel=retail and message=low_odor                       37  0.031
+  sum for channel x message                                410  0.342
+
+P(A and B and C)
+  price=3.49 and channel=online and message=(blank)          8  0.007
+  price=3.49 and channel=online and message=cleaning        30  0.025
+  price=3.49 and channel=online and message=environment     47  0.039
+  price=3.49 and channel=online and message=low_odor        29  0.024
+  price=3.49 and channel=retail and message=(blank)         17  0.014
+  price=3.49 and channel=retail and message=cleaning        22  0.018
+  price=3.49 and channel=retail and message=environment     30  0.025
+  price=3.49 and channel=retail and message=low_odor        20  0.017
+  price=4.49 and channel=online and message=(blank)          3  0.003
+  price=4.49 and channel=online and message=cleaning        22  0.018
+  price=4.49 and channel=online and message=environment     21  0.018
+  price=4.49 and channel=online and message=low_odor        27  0.022
+  price=4.49 and channel=retail and message=(blank)         12  0.010
+  price=4.49 and channel=retail and message=cleaning        28  0.023
+  price=4.49 and channel=retail and message=environment     16  0.013
+  price=4.49 and channel=retail and message=low_odor        12  0.010
+  price=5.49 and channel=online and message=(blank)          4  0.003
+  price=5.49 and channel=online and message=cleaning        18  0.015
+  price=5.49 and channel=online and message=environment     26  0.022
+  price=5.49 and channel=online and message=low_odor         9  0.007
+  price=5.49 and channel=retail and message=(blank)          1  0.001
+  price=5.49 and channel=retail and message=cleaning        12  0.010
+  price=5.49 and channel=retail and message=environment      9  0.007
+  price=5.49 and channel=retail and message=low_odor         5  0.004
+  sum for price x channel x message                        428  0.357
