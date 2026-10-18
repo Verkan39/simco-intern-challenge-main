@@ -51,3 +51,10 @@ EXPECTATION:
 This model is a simple model. But given we have 5 choice (including none), so for the most fair case if I take 20% probability, we should get the score around 1.61. The lower the score from 1.61, the more bias is towards one choice. We check scores based on blocks of household.
 
 I am curious to see if M0 will beat the baseline model on the score. If baseline wins, we get to know that yeah, the assumptions we got from baseline maybe correct, but if M0 wins we conclude that setting hard-coded weights are worse.
+
+WROTE experiments/m0.py
+EVALUATED MODEL with experiments/evaluation.py
+
+RESULT & CONCLUSION:
+The result is stored in results/results_m0.txt
+From the results, I clearly see that baseline model beats M0. So now what I conclude is a very obvious conclusion that the other parameters are important and we need to consider them, as that is considered by baseline model, even though hard-coded. Might be the assumptions baseline made are true, but there is no certainity of this fact. 
