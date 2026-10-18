@@ -1,0 +1,51 @@
+Warning: uncommitted changes. The run will be logged with uncommitted_changes = 1.
+
+data/train_household.csv: 200 households
+
+Blank values
+  household_id            0
+  income_band             0
+  cleaning_spend_usd     24
+  budget                  0
+  bathrooms               0
+  usual_brand            17
+  note                   37
+
+Spearman rank correlation (rows with a blank in either column are left out)
+  income_band x cleaning_spend_usd       0.26   (n = 176)
+  income_band x budget                   0.44   (n = 200)
+  income_band x bathrooms                0.12   (n = 200)
+  cleaning_spend_usd x budget                   0.14   (n = 176)
+  cleaning_spend_usd x bathrooms                0.56   (n = 176)
+  budget x bathrooms               -0.04   (n = 200)
+
+income_band x budget
+                    flexible      middle       tight
+  50k_to_100k             17          56          30
+  over_100k               25          20           2
+  under_50k                6          16          28
+
+usual_brand x budget
+                    flexible      middle       tight
+  (blank)                  6           8           3
+  budget                  12          39          25
+  scented                  8          14          13
+  standard                22          31          19
+
+Note sentences (37 households have a blank note)
+    35  I buy supplies during one weekly trip.
+    35  I usually buy the same cleaner.
+    33  I can pay more if a cleaner solves a problem.
+    30  I watch every dollar I spend on household supplies.
+    30  I look for a lower price before I buy cleaner.
+    25  A weak cleaner failed on old stains.
+    22  I worry about cleaners that go down the drain.
+    19  I want to use fewer plastic bottles.
+    17  A low-price cleaner worked well for me.
+    17  I like a fresh scent after cleaning.
+    17  I used one cleaner for years.
+    17  I do not trust green claims without proof.
+    16  A sharp cleaner smell bothered me before.
+    13  A refill pack leaked in my cupboard.
+
+Logged as run 3. Finish it with: python run_log.py finish 3 <status> "<conclusion>"
