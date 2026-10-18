@@ -141,6 +141,30 @@ class AppTests(unittest.TestCase):
         self.assertEqual(response.status_code, 422)
         self.assertIn("M2 cannot use this input", response.json()["detail"])
 
+    def test_m3_uses_history(self):
+        from app.main import MODELS, MODEL_DIR
+        if "M3" not in MODELS:
+            self.skipTest("models/M3.json is not present.")
+        import json
+        from experiments import m3
+        saved = json.loads((MODEL_DIR / "M3.json").read_text(encoding="utf-8"))
+        household = {"budget": "middle", "usual_brand": "standard", "cleaning_spend_usd": 13, "bathrooms": 1}
+        history = [{"choice": "standard"}, {"choice": "none"}, {"choice": "entrant"}]
+        body = {**REQUEST, "household": household, "history": history}
+        result = self.client.post("/predict?model=M3", json=body).json()
+        offers = [
+            {"product_id": "entrant", "price": 4.49, "message": "cleaning"},
+            {"product_id": "standard", "price": 3.99},
+            {"product_id": "budget", "price": 2.99},
+            {"product_id": "scented", "price": 4.29},
+        ]
+        direct = m3.predictor(saved)({**household, "income_band": None, "note": ""}, offers, {"channel": "retail"}, history)
+        for option, probability in direct["probabilities"].items():
+            self.assertAlmostEqual(result["probabilities"][option], probability)
+        self.assertEqual((result["model"], result["run_id"], result["provisional"]), ("M3", saved["run_id"], True))
+        first_visit = self.client.post("/predict?model=M3", json={**body, "history": []}).json()
+        self.assertNotEqual(first_visit["probabilities"], result["probabilities"])
+
     def test_runs_can_be_listed_and_inspected(self):
         runs = self.client.get("/runs").json()
         self.assertGreaterEqual(len(runs), 1)
