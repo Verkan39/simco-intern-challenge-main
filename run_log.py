@@ -5,6 +5,7 @@ after (outputs, status, conclusion). Rows are never deleted.
 
     python run_log.py list
     python run_log.py show 3
+    python run_log.py finish 3 inconclusive "What I conclude."
 """
 
 import hashlib
@@ -76,18 +77,29 @@ def start_run(name, expectation, inputs, data_files):
         return cursor.lastrowid
 
 
+def open_run(connection, run_id):
+    row = connection.execute("SELECT status FROM runs WHERE id = ?", (run_id,)).fetchone()
+    if row is None:
+        raise ValueError(f"No run with ID {run_id}.")
+    if row["status"] != "started":
+        raise ValueError(f"Run {run_id} is already finished.")
+
+
+def record_outputs(run_id, outputs):
+    """Save a run's outputs while it is still open; the status and conclusion come later."""
+    with connect() as connection:
+        open_run(connection, run_id)
+        connection.execute("UPDATE runs SET outputs = ? WHERE id = ?", (outputs, run_id))
+
+
 def finish_run(run_id, outputs, status, conclusion=""):
-    """Record what happened. A run can only be finished once."""
+    """Record what happened. A run can only be finished once. Outputs of None keep those already saved."""
     if status not in STATUSES:
         raise ValueError(f"Status must be one of {STATUSES}.")
     with connect() as connection:
-        row = connection.execute("SELECT status FROM runs WHERE id = ?", (run_id,)).fetchone()
-        if row is None:
-            raise ValueError(f"No run with ID {run_id}.")
-        if row["status"] != "started":
-            raise ValueError(f"Run {run_id} is already finished.")
+        open_run(connection, run_id)
         connection.execute(
-            "UPDATE runs SET finished_at = ?, outputs = ?, status = ?, conclusion = ? WHERE id = ?",
+            "UPDATE runs SET finished_at = ?, outputs = COALESCE(?, outputs), status = ?, conclusion = ? WHERE id = ?",
             (now(), outputs, status, conclusion, run_id),
         )
 
@@ -132,6 +144,9 @@ def main():
         show(int(sys.argv[2]))
     elif len(sys.argv) == 2 and sys.argv[1] == "list":
         list_runs()
+    elif len(sys.argv) == 5 and sys.argv[1] == "finish":
+        finish_run(int(sys.argv[2]), None, sys.argv[3], sys.argv[4])
+        print(f"Run {sys.argv[2]} finished as {sys.argv[3]}.")
     else:
         print(__doc__)
 
