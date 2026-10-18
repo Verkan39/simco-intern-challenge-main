@@ -113,3 +113,10 @@ We will build this over M2. Here is a catch, here if the choice is "none", we sk
 
 EXPECTATION:
 the score difference between M3 and M2, is the impact of the repeat factor. If we see that bringing this in, is degrading our model, we will get back to M2. I have no intuitions on how this impact will look like.
+
+WROTE experiments/m3.py
+EVALUATED MODEL with experiments/evaluation.py
+
+RESULT & CONCLUSION:
+The result is stored in results/result_m3.txt
+Hurray again!! M3 beats M2. this means that there is an imapct of repeat factor. now M3 beats baseline in 4 out of 5 folds, which is better than 3 of 5 by M2. However our push-pull was not supported by data, by data, the most recent purchased gets -0.22 and the previous purchase add +0.28, so we see that people return to earlier products, rather than repeating immediately. Rest of our conclusions form M2, stay stable, this is an interesting conclusion.
