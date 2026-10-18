@@ -20,7 +20,7 @@ from fastapi.responses import RedirectResponse
 from pydantic import BaseModel, ConfigDict, Field
 
 import baseline
-from experiments import m0, m1
+from experiments import m0, m1, m2
 
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -65,6 +65,16 @@ if (MODEL_DIR / "M1.json").exists():
         description="M1: household traits only (usual brand, budget, income band, cleaning spend, bathrooms); "
         "ignores the offer and history. Needs budget, income_band and bathrooms (1 to 3); a missing spend is "
         "filled like a blank. Its run was inconclusive: it did not clearly beat M0 and lost to the baseline.",
+    )
+if (MODEL_DIR / "M2.json").exists():
+    saved = json.loads((MODEL_DIR / "M2.json").read_text(encoding="utf-8"))
+    MODELS["M2"] = Model(
+        predict=m2.predictor(saved),
+        run_id=saved["run_id"],
+        provisional=True,
+        description="M2: the levers (all four prices, entrant message, channel) plus usual brand and spend -> "
+        "entrant; ignores history. Needs cleaning_spend_usd, or bathrooms (1 to 3) to fill a blank spend. "
+        "Best model so far: it beat M1r in 4 of 5 folds and the baseline on average, but only in 3 of 5 folds.",
     )
 DEFAULT_MODEL = "baseline"
 ModelName = Enum("ModelName", {name: name for name in MODELS}, type=str)

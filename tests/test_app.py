@@ -112,6 +112,35 @@ class AppTests(unittest.TestCase):
             self.assertEqual(response.status_code, 422)
             self.assertIn("M1 cannot use this input", response.json()["detail"])
 
+    def test_m2_uses_the_offer_and_rejects_unusable_input(self):
+        from app.main import MODELS, MODEL_DIR
+        if "M2" not in MODELS:
+            self.skipTest("models/M2.json is not present.")
+        import json
+        from experiments import m2
+        saved = json.loads((MODEL_DIR / "M2.json").read_text(encoding="utf-8"))
+        household = {"budget": "middle", "usual_brand": "standard", "cleaning_spend_usd": 13, "bathrooms": 1}
+        body = {**REQUEST, "household": household}
+        result = self.client.post("/predict?model=M2", json=body).json()
+        offers = [
+            {"product_id": "entrant", "price": 4.49, "message": "cleaning"},
+            {"product_id": "standard", "price": 3.99},
+            {"product_id": "budget", "price": 2.99},
+            {"product_id": "scented", "price": 4.29},
+        ]
+        direct = m2.predictor(saved)({**household, "income_band": None, "note": ""}, offers, {"channel": "retail"}, [])
+        for option, probability in direct["probabilities"].items():
+            self.assertAlmostEqual(result["probabilities"][option], probability)
+        self.assertEqual((result["model"], result["run_id"], result["provisional"]), ("M2", saved["run_id"], True))
+        cheaper = self.client.post("/predict?model=M2", json={**body, "offer": {**REQUEST["offer"], "entrant_price": 3.49}}).json()
+        self.assertGreater(cheaper["probabilities"]["entrant"], result["probabilities"]["entrant"])
+        blank_message = self.client.post("/predict?model=M2", json={**body, "offer": {**REQUEST["offer"], "entrant_message": ""}})
+        self.assertEqual(blank_message.status_code, 200)
+        no_spend_no_bathrooms = {**household, "cleaning_spend_usd": None, "bathrooms": None}
+        response = self.client.post("/predict?model=M2", json={**REQUEST, "household": no_spend_no_bathrooms})
+        self.assertEqual(response.status_code, 422)
+        self.assertIn("M2 cannot use this input", response.json()["detail"])
+
     def test_runs_can_be_listed_and_inspected(self):
         runs = self.client.get("/runs").json()
         self.assertGreaterEqual(len(runs), 1)

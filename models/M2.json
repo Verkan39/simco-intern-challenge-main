@@ -1,0 +1,66 @@
+{
+  "model": "M2",
+  "run_id": 7,
+  "fitted_on": "all 200 build households in visits.csv",
+  "data_version": {
+    "data/visits.csv": "3e4613fab8db70b23358975885eda3e3767815ff8970cf5c314361821e8dc896",
+    "data/train_household.csv": "768a4a34d1aece5728df77c15c2cb765cc7fe7d1d7489bb2ef9b97ef9dd30779"
+  },
+  "penalty": 1.0,
+  "names": [
+    "start: entrant",
+    "start: standard",
+    "start: budget",
+    "start: scented",
+    "usual brand",
+    "spend -> entrant",
+    "price: entrant",
+    "price: usual brand",
+    "price: other products",
+    "message=cleaning -> entrant",
+    "message=low_odor -> entrant",
+    "message=environment -> entrant",
+    "message=(blank) -> entrant",
+    "channel=online -> entrant",
+    "channel=retail -> entrant",
+    "channel=online -> standard",
+    "channel=retail -> standard",
+    "channel=online -> budget",
+    "channel=retail -> budget",
+    "channel=online -> scented",
+    "channel=retail -> scented"
+  ],
+  "weights": [
+    0.42965812524336927,
+    0.08059075060965926,
+    0.1440019897244972,
+    -0.17974974598222954,
+    0.31921964856216967,
+    0.22349231724151697,
+    -0.5125253268759374,
+    -0.43117883304859556,
+    0.11667270620387495,
+    0.006610190950506145,
+    -0.23982103417923964,
+    0.1984625285871264,
+    0.034748314641620794,
+    0.062396328742722926,
+    -0.062396328742711366,
+    -0.20284309094483155,
+    0.20284309094482597,
+    -0.10733192991500501,
+    0.10733192991501192,
+    -0.0032466164060260317,
+    0.0032466164060200365
+  ],
+  "stats": {
+    "medians": {
+      "1": 18.0,
+      "2": 24.5,
+      "3": 34.0
+    },
+    "spend_mean": 22.46,
+    "spend_scale": 7.288237098228899,
+    "price_average": 3.8829166666666675
+  }
+}
