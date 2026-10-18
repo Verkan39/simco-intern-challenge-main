@@ -2,6 +2,8 @@
 
 The data files have not changed since the initial commit (24924b8), so their
 current hashes are the versions those runs used.
+
+Run from the project folder: python -m experiments.backfill_runs
 """
 
 import subprocess
@@ -59,7 +61,7 @@ def main():
         },
         data_files=["data/visits.csv"],
         model_version="3388664",
-        outputs=(ROOT / "result_test1.txt").read_text(encoding="utf-8"),
+        outputs=(ROOT / "results" / "result_test1.txt").read_text(encoding="utf-8"),
         status="failed",
         conclusion=section(result_file, "RESULT & CONCLUSION :"),
         note="Expectation copied from commit abd7d7e (02:32:50), conclusion from commit 4fe17a8. The run happened"

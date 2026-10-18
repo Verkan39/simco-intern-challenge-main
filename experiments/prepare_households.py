@@ -1,8 +1,10 @@
-"""Task 1 in DATA_PREPARATION.md: are the household columns related?
+"""Task 1 in docs/DATA_PREPARATION.md: are the household columns related?
 
 Uses only the 200 build households. Logs itself in runs.db: the expectation is read
-from DATA_PREPARATION.md when the run starts, and the outputs are saved when it ends.
+from docs/DATA_PREPARATION.md when the run starts, and the outputs are saved when it ends.
 The status and conclusion are added afterwards with `python run_log.py finish`.
+
+Run from the project folder: python -m experiments.prepare_households
 """
 
 import csv
@@ -27,7 +29,7 @@ COLUMNS = {
 
 
 def expectation():
-    text = (ROOT / "DATA_PREPARATION.md").read_text(encoding="utf-8")
+    text = (ROOT / "docs" / "DATA_PREPARATION.md").read_text(encoding="utf-8")
     task = text.split("TASK 1:", 1)[1].split("TASK 2:", 1)[0]
     return task.split("EXPECTATION:", 1)[1].strip()
 
@@ -94,7 +96,7 @@ def main():
         name="Task 1: are household columns related?",
         expectation=expectation(),
         inputs={
-            "command": "python prepare_households.py",
+            "command": "python -m experiments.prepare_households",
             "households": "200 build households (those in visits.csv)",
             "correlation": "Spearman on ranks, tied values get their average rank",
             "income_order": INCOME,

@@ -4,6 +4,8 @@ For label(s) A, each household contributes the number of entrant purchases from 
 first visit where A was shown and the entrant was bought, onward (that visit included),
 whatever the labels of the later visits. P(A) = sum over households / total rows.
 Blank shelf messages are kept as their own value, "(blank)".
+
+Run from the project folder: python -m experiments.label_probabilities
 """
 
 import sys
