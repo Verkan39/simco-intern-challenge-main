@@ -3,6 +3,10 @@
 Start a run before the experiment (expectation, inputs, versions), then finish it
 after (outputs, status, conclusion). Rows are never deleted.
 
+A run can be started before its code exists, to record the expectation first. When
+its outputs are saved, model_version is updated to the commit that produced them,
+and ran_at records when that happened.
+
     python run_log.py list
     python run_log.py show 3
     python run_log.py finish 3 inconclusive "What I conclude."
@@ -45,7 +49,15 @@ def connect():
     connection = sqlite3.connect(DATABASE)
     connection.row_factory = sqlite3.Row
     connection.execute(SCHEMA)
+    columns = {row["name"] for row in connection.execute("PRAGMA table_info(runs)")}
+    if "ran_at" not in columns:
+        connection.execute("ALTER TABLE runs ADD COLUMN ran_at TEXT")
     return connection
+
+
+def uncommitted_changes():
+    changes = git("status", "--porcelain", "--", ".", ":!runs.db")
+    return None if changes is None else int(bool(changes))
 
 
 def now():
@@ -66,13 +78,12 @@ def start_run(name, expectation, inputs, data_files):
     """Record a run before it happens and return its ID."""
     if not expectation.strip():
         raise ValueError("Write the expectation before starting the run.")
-    changes = git("status", "--porcelain", "--", ".", ":!runs.db")
     with connect() as connection:
         cursor = connection.execute(
             "INSERT INTO runs (name, started_at, expectation, inputs, model_version, uncommitted_changes, data_version)"
             " VALUES (?, ?, ?, ?, ?, ?, ?)",
             (name, now(), expectation, json.dumps(inputs), git("rev-parse", "--short", "HEAD"),
-             None if changes is None else int(bool(changes)), json.dumps(data_version(data_files))),
+             uncommitted_changes(), json.dumps(data_version(data_files))),
         )
         return cursor.lastrowid
 
@@ -86,10 +97,13 @@ def open_run(connection, run_id):
 
 
 def record_outputs(run_id, outputs):
-    """Save a run's outputs while it is still open; the status and conclusion come later."""
+    """Save a run's outputs while it is still open, with the commit that produced them."""
     with connect() as connection:
         open_run(connection, run_id)
-        connection.execute("UPDATE runs SET outputs = ? WHERE id = ?", (outputs, run_id))
+        connection.execute(
+            "UPDATE runs SET outputs = ?, model_version = ?, uncommitted_changes = ?, ran_at = ? WHERE id = ?",
+            (outputs, git("rev-parse", "--short", "HEAD"), uncommitted_changes(), now(), run_id),
+        )
 
 
 def finish_run(run_id, outputs, status, conclusion=""):

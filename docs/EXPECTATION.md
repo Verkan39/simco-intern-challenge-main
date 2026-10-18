@@ -17,3 +17,18 @@ RAN label_probabilities.py
 RESULT & CONCLUSION :
 The result is stored in result_test1.txt.
 So my idea failed at this point, not completely, but partially. we computed values of p(A), p(A and B), p(A and B and C) across all available cominations, and we can check independence of combinations easily, but rather that checking independence of combinations, I am more concerened about independence of "price", "channel" and "entrant_message". Now I first though of using p-values with Chi-Square, but that doesnt work because for that we need to assume two rows to be independent, which they clearly are not. 
+
+
+TEST 2:
+
+OBJECTIVE:
+understanding how each value of price, channel and shelf-message change how often entrant is brought
+
+TEST:
+Basically we will use the standard bootstrap method. 
+
+NOTE:
+I tried innovative methods in my last 2 tests and I am heading deadlline, so instead of moving along newer ideas I guess I will use standard methods to have some progress to show.
+
+EXPECTATION:
+I have expect to see a few clear levers dominating, maybe lower price or better label something like that, if this happens I get an indication that somehow this lever dominates over all other parameters of the user.
