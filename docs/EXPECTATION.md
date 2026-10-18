@@ -38,3 +38,16 @@ RAN experiments/lever_rates.py
 RESULT & CONCLUSION:
 The result is stored in result/result_test2.txt
 From the results, I see that for price, 3.49 has more entrant purchase rate than 4.49 which indeed has more entrant purchase rate than 5.49, and the observed differences are 10% for 3.49 and 4.49 and 6.1% for 4.49 and 5.49, consistently having 16.1% between 3.49 and 5.49. we see direction of more entrant purchase rate towards lower price, as I expected through intuition. we dont see any clear direction in "message". for channel, we see the direction of more entrant purchase towards online than retail, and the observed differnce is 5.2%. 
+
+MODEL M0:
+
+OBJECTIVE:
+To make the most basic model just based on "choice"
+
+HOW?
+We will design this model just based on the "choice" column. We dont take in care of any other parameter. We will just find out probabilities of each choice being chosen. Then we use log-loss for scoring. We use cross validation for scoring to get a better score, we divide data in 5 blocks based on household and obtain probability from 4 blocks and compute score on the 5th one, doing so 5 times, so that we get a honest score.
+
+EXPECTATION:
+This model is a simple model. But given we have 5 choice (including none), so for the most fair case if I take 20% probability, we should get the score around 1.61. The lower the score from 1.61, the more bias is towards one choice. We check scores based on blocks of household.
+
+I am curious to see if M0 will beat the baseline model on the score. If baseline wins, we get to know that yeah, the assumptions we got from baseline maybe correct, but if M0 wins we conclude that setting hard-coded weights are worse.
