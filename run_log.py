@@ -23,7 +23,8 @@ from pathlib import Path
 
 ROOT = Path(__file__).parent
 DATABASE = ROOT / "runs.db"
-STATUSES = ("success", "failed", "inconclusive")
+# An empty status means the run is finished without a verdict.
+STATUSES = ("success", "failed", "inconclusive", "")
 
 SCHEMA = """
 CREATE TABLE IF NOT EXISTS runs (

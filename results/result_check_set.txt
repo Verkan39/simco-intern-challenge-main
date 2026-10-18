@@ -1,0 +1,30 @@
+check_visits.csv: 300 visits, 50 households (none in the build set)
+Models fitted on all 200 build households; scored once on the check set.
+Log loss = mean of -ln(probability given to the actual choice). Lower is better.
+95% ranges from 1000 resamples of the 50 check households.
+
+  model     log loss   top choice matched   entrant expected   entrant chosen
+  M3           1.573                27.0%              20.6%            18.3%
+  M2           1.576                28.7%              21.0%            18.3%
+  M0           1.590                25.0%              21.1%            18.3%
+  baseline     1.563                28.0%              15.4%            18.3%
+
+  difference          value   95% range         M3 lower in
+  M3 - M2            -0.003   -0.022 to +0.013     66% of resamples   within noise
+  M3 - baseline      +0.010   -0.024 to +0.041     30% of resamples   within noise
+  M3 - M0            -0.018   -0.052 to +0.017     84% of resamples   within noise
+
+Entrant share on check visits: each model's mean prediction vs what was chosen
+  setting                  visits  chosen        M3       M2       M0 baseline
+  entrant price 3.49          102   25.5%     28.4%    29.4%    21.1%    21.7%
+  entrant price 4.49          107   20.6%     19.5%    20.0%    21.1%    14.7%
+  entrant price 5.49           91    7.7%     13.1%    12.7%    21.1%     9.2%
+  message cleaning            106   17.9%     20.9%    21.3%    21.1%    15.3%
+  message low_odor             78   17.9%     17.3%    18.1%    21.1%    15.5%
+  message environment          96   21.9%     23.0%    23.1%    21.1%    16.0%
+  message (blank)              20    5.0%     20.0%    20.6%    21.1%    13.1%
+  channel online              153   22.2%     23.6%    24.1%    21.1%    16.8%
+  channel retail              147   14.3%     17.4%    17.7%    21.1%    14.0%
+  (Small groups are noisy: about 75-150 visits per setting.)
+
+Saved to run 9. Finish it with: python run_log.py finish 9 <status> "<conclusion>"

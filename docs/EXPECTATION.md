@@ -126,3 +126,8 @@ CHECK SET
 
 EXPECTATION:
 There is no data leakage anywhere in my whole process, so I am expecting that my model is generalised and we get similar results on the test dataset as we are getting on training set.
+
+RESULT & CONCLUSION:
+The result is stored in results/result_check_set.txt
+I expected results to of the training set and testing set to be similar, but no they differ slightly. This maybe due to the size of testing set being too small, that is noise might have overpowered. M3 or M2 seems to not predicting households better than hard-coded baseline, but the weights computed being so close to hard-coded guesses, some how confirmed the hard-coded guesses. 
+Our lever directions are verified once again, i.e. lower price is better, online conversion is better, and we are still not very sure about the entrant message.
