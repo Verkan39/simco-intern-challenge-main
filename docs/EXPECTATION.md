@@ -78,3 +78,14 @@ The result is stored in results/result_m1.txt
 So I am actually shocked  by the results. The most of final weights are very inconclusive, from the only few trustworthy weights we can, I can conclude that househoulds with greater spend in cleaning, tend to choose the entrant product (okay, might be a useful insight). On checking the log loss, we see M1 was beaten by M0 in 2 out of 5 folds, and beaten by 4 out of 5 folds.
 This looks like our model failed, but at this point I will like to check the hard-coded weights of the baseline model. following which I found, the weight for usual brand in M1 is 0.45 and on the baseline model it is 0.55, which are very close. 
 The other weights of baseline havenot been considered yet in the model, because we have to train our model to two more things, choice and repeat, might be our model fails because it's incomplete.
+
+MODEL M2:
+
+OBJECTTIVE:
+Train the model to include how price of all offers, channel and "entrant-message" decide which choice the customer makes
+
+HOW?
+For this, we take two weights that were reliable in M1. We could have taken all the weights but that would increase noise and model complexity. Now similarly as we did for M1, we will use multinomial logistic regression starting weights as 0, and then using maximum likelyhood keep iterating over weights until we get almost 0 slope. To note, in our previous test, we have seen a direction towards lower price, so in the variables, for the options, I am considerding three parameters, one is entrant price, second is usual choice price, and third one is the shared price weight. 
+
+EXPECTATION:
+We are reducing dependency of model on household, and bringing in weights that add value for the given options, channel and entrant-message, so I expect to see a better result than the previous models.
