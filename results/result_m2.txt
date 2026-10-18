@@ -1,0 +1,94 @@
+visits.csv: 1200 visits, 200 households, 5 folds of 40 households
+M2: 21 weights; M1r: 6 weights (M2 without the levers); L2 penalty 1.0 (starting values not penalised)
+Household inputs were chosen from M1's results (run 6) on the same data, so M2's score may be slightly optimistic.
+The budget cleaner's price never varies (2.99), so no price effect is learned from it.
+Log loss = mean of -ln(probability given to the actual choice). Lower is better.
+
+  fold  visits        M2      M1r       M1       M0 baseline      M2 - M1r       M2 - M1 M2 - baseline
+  1        240     1.562    1.580    1.589    1.602    1.555        -0.018        -0.027        +0.007
+  2        240     1.575    1.596    1.608    1.599    1.584        -0.021        -0.033        -0.009
+  3        240     1.543    1.573    1.608    1.601    1.596        -0.030        -0.066        -0.054
+  4        240     1.576    1.574    1.588    1.592    1.574        +0.002        -0.012        +0.002
+  5        240     1.556    1.573    1.574    1.598    1.588        -0.017        -0.018        -0.032
+
+Across folds
+  M2        mean 1.562   sd 0.014   min 1.543   max 1.576
+  M1r       mean 1.579   sd 0.010   min 1.573   max 1.596
+  M1        mean 1.593   sd 0.015   min 1.574   max 1.608
+  M0        mean 1.598   sd 0.004   min 1.592   max 1.602
+  baseline  mean 1.579   sd 0.016   min 1.555   max 1.596
+  M2 - M1r       mean -0.017   sd 0.012   min -0.030   max +0.002   (M2 lower in 4 of 5 folds)
+  M2 - M1        mean -0.031   sd 0.021   min -0.066   max -0.012   (M2 lower in 5 of 5 folds)
+  M2 - baseline  mean -0.017   sd 0.025   min -0.054   max +0.007   (M2 lower in 3 of 5 folds)
+
+Supporting measures (all held-out visits)
+  M2        top choice matched 30.8%   entrant expected 20.9%   entrant chosen 21.1%
+  M1r       top choice matched 27.3%   entrant expected 21.0%   entrant chosen 21.1%
+  M1        top choice matched 27.3%   entrant expected 21.0%   entrant chosen 21.1%
+  M0        top choice matched 25.2%   entrant expected 21.1%   entrant chosen 21.1%
+  baseline  top choice matched 29.0%   entrant expected 15.9%   entrant chosen 21.1%
+
+M2 fitted on all 200 households (Newton's method converged in 4 steps)
+Price average used for centring: 3.883; spend medians for blanks: {'1': 18.0, '2': 24.5, '3': 34.0}
+95% ranges from 200 household resamples; * = range crosses 0, so not a trustworthy reason
+  weight                               value   95% range
+  start: entrant                       +0.43   +0.12 to +0.68
+  start: standard                      +0.08   -0.13 to +0.29  *
+  start: budget                        +0.14   -0.23 to +0.58  *
+  start: scented                       -0.18   -0.43 to +0.04  *
+  usual brand                          +0.32   +0.13 to +0.50
+  spend -> entrant                     +0.22   +0.08 to +0.38
+  price: entrant                       -0.51   -0.67 to -0.36
+  price: usual brand                   -0.43   -0.85 to +0.09  *
+  price: other products                +0.12   -0.26 to +0.54  *
+  message=cleaning -> entrant          +0.01   -0.27 to +0.22  *
+  message=low_odor -> entrant          -0.24   -0.50 to +0.03  *
+  message=environment -> entrant       +0.20   -0.03 to +0.42  *
+  message=(blank) -> entrant           +0.03   -0.24 to +0.33  *
+  channel=online -> entrant            +0.06   -0.08 to +0.21  *
+  channel=retail -> entrant            -0.06   -0.21 to +0.08  *
+  channel=online -> standard           -0.20   -0.35 to -0.05
+  channel=retail -> standard           +0.20   +0.05 to +0.35
+  channel=online -> budget             -0.11   -0.26 to +0.02  *
+  channel=retail -> budget             +0.11   -0.02 to +0.26  *
+  channel=online -> scented            -0.00   -0.16 to +0.16  *
+  channel=retail -> scented            +0.00   -0.16 to +0.16  *
+
+Lever effects (differences are what categories without a reference can be read by)
+  price: entrant                       -0.51 per $1 (odds x0.60)   -0.67 to -0.36
+  price: usual brand                   -0.43 per $1 (odds x0.65)   -0.85 to +0.09  *
+  price: other products                +0.12 per $1 (odds x1.12)   -0.26 to +0.54  *
+  (starter baseline's hand-set price weight: -0.40 per $1, odds x0.67)
+  message cleaning - low_odor          +0.25   -0.19 to +0.60  *
+  message cleaning - environment       -0.19   -0.56 to +0.13  *
+  message cleaning - (blank)           -0.03   -0.53 to +0.39  *
+  message low_odor - environment       -0.44   -0.79 to -0.06
+  message low_odor - (blank)           -0.27   -0.69 to +0.24  *
+  message environment - (blank)        +0.16   -0.29 to +0.60  *
+  online - retail -> entrant           +0.12   -0.16 to +0.43  *
+  online - retail -> standard          -0.41   -0.71 to -0.11
+  online - retail -> budget            -0.21   -0.52 to +0.04  *
+  online - retail -> scented           -0.01   -0.32 to +0.33  *
+
+Entrant share by lever setting: M2's mean prediction with the setting applied to every build visit,
+next to the observed rate on visits that had that setting (Test 2's measure)
+  setting                      M2 predicted  observed  visits
+  entrant price 3.49                  29.2%     29.4%     428
+  entrant price 4.49                  20.0%     19.4%     396
+  entrant price 5.49                  13.1%     13.3%     376
+  message cleaning                    21.1%     21.4%     346
+  message low_odor                    17.5%     17.2%     355
+  message environment                 24.4%     24.5%     363
+  message (blank)                     21.6%     21.3%     136
+  channel online                      23.5%     23.7%     595
+  channel retail                      18.7%     18.5%     605
+
+Example households (fitted on them too), fixed offer: entrant 4.49, standard 3.99, budget 2.99, scented 4.29, entrant message environment, online
+  H001: budget=middle, income_band=50k_to_100k, cleaning_spend_usd=13, bathrooms=1, usual_brand=standard
+    standard 23.0%  entrant 21.6%  none 19.7%  budget 18.5%  scented 17.2%
+    reason: standard, largest contributions to its score: usual brand +0.32, channel=online -0.20, price: usual brand -0.05.
+  H002: budget=middle, income_band=under_50k, cleaning_spend_usd=7, bathrooms=1, usual_brand=standard
+    standard 23.8%  none 20.5%  budget 19.2%  entrant 18.6%  scented 17.9%
+    reason: standard, largest contributions to its score: usual brand +0.32, channel=online -0.20, price: usual brand -0.05.
+
+Saved to run 7. Finish it with: python run_log.py finish 7 <status> "<conclusion>"

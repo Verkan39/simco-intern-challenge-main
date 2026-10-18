@@ -89,3 +89,16 @@ For this, we take two weights that were reliable in M1. We could have taken all 
 
 EXPECTATION:
 We are reducing dependency of model on household, and bringing in weights that add value for the given options, channel and entrant-message, so I expect to see a better result than the previous models.
+
+WROTE experiments/m2.py
+EVALUATED MODEL with experiments/evaluation.py
+
+RESULT & CONCLUSION:
+The result is stored in results/result_m2.txt
+Hurray! the first model that almost beat the baseline model. 
+First thing I was concerned about was that is my decision of removing unrealiable weights from M1 a good decision. So here model M1r is the model which only has the realible weights and we see clearly tha M1r beats M1, so this supports my decision.
+M2 model beats M1 over all the 5 folds, M1r over 4 out of 5 folds and baseline model on 3 out of 5 folds. On average, M2 has beat M1r, M1, M0, and baseline model.
+We have very interesting facts coming up from the results:
+i. Online helps entrant because it's competitor stand weaker online, we conclude this as we dont have a realible number for entrant in online channel, but realible negative numbers for standard. This is an extension of one of our conclusions from test 2.
+ii. The message still remains noisy, just that environment has beat low_ordor. 
+iii. The entrant price weight is −0.51 per $1. This quantifies our result from test 2 that there is a direction towards lower price.
