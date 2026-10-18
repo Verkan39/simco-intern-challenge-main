@@ -12,10 +12,10 @@ Then I check independence with classical probability rules for pairs and then in
 EXPECTATION:
 I expect to see P(A∩B) = P(A)·P(B) the equality holding nearly true. If that happens I am in a state of doubt whether this is actual relation or is this another noise considered as relation. If the equality isnt holding true, I am sure they are independent.
 
-RAN label_probabilities.py
+RAN experiments/label_probabilities.py
 
 RESULT & CONCLUSION :
-The result is stored in result_test1.txt.
+The result is stored in rest/result_test1.txt.
 So my idea failed at this point, not completely, but partially. we computed values of p(A), p(A and B), p(A and B and C) across all available cominations, and we can check independence of combinations easily, but rather that checking independence of combinations, I am more concerened about independence of "price", "channel" and "entrant_message". Now I first though of using p-values with Chi-Square, but that doesnt work because for that we need to assume two rows to be independent, which they clearly are not. 
 
 
@@ -32,3 +32,9 @@ I tried innovative methods in my last 2 tests and I am heading deadlline, so ins
 
 EXPECTATION:
 I have expect to see a few clear levers dominating, maybe lower price or better label something like that, if this happens I get an indication that somehow this lever dominates over all other parameters of the user.
+
+RAN experiments/lever_rates.py
+
+RESULT & CONCLUSION:
+The result is stored in result/result_test2.txt
+From the results, I see that for price, 3.49 has more entrant purchase rate than 4.49 which indeed has more entrant purchase rate than 5.49, and the observed differences are 10% for 3.49 and 4.49 and 6.1% for 4.49 and 5.49, consistently having 16.1% between 3.49 and 5.49. we see direction of more entrant purchase rate towards lower price, as I expected through intuition. we dont see any clear direction in "message". for channel, we see the direction of more entrant purchase towards online than retail, and the observed differnce is 5.2%. 

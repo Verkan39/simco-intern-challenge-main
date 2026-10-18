@@ -1,0 +1,36 @@
+visits.csv: 1200 visits, 200 households, 253 entrant purchases
+1000 household resamples, seed 2026. Blank messages shown as (blank).
+A difference is clear when its 95% range excludes 0.
+
+price
+  value          visits bought    rate   95% range
+  3.49              428    126   29.4%   24.7% to 34.1%
+  4.49              396     77   19.4%   15.1% to 23.9%
+  5.49              376     50   13.3%   10.3% to 16.7%
+  difference                         rate   95% range         verdict
+  3.49 - 4.49                      +10.0%   +4.5% to +15.4%   clear
+  3.49 - 5.49                      +16.1%   +11.3% to +21.1%   clear
+  4.49 - 5.49                       +6.1%   +1.0% to +11.3%   clear
+
+message
+  value          visits bought    rate   95% range
+  (blank)           136     29   21.3%   15.0% to 28.2%
+  cleaning          346     74   21.4%   16.6% to 26.2%
+  environment       363     89   24.5%   19.5% to 29.7%
+  low_odor          355     61   17.2%   13.2% to 21.5%
+  difference                         rate   95% range         verdict
+  (blank) - cleaning                -0.1%   -7.2% to +7.3%   within noise
+  (blank) - environment             -3.2%   -11.4% to +5.1%   within noise
+  (blank) - low_odor                +4.1%   -3.3% to +11.9%   within noise
+  cleaning - environment            -3.1%   -9.6% to +3.0%   within noise
+  cleaning - low_odor               +4.2%   -1.4% to +9.9%   within noise
+  environment - low_odor            +7.3%   +1.7% to +13.2%   clear
+
+channel
+  value          visits bought    rate   95% range
+  online            595    141   23.7%   19.7% to 27.9%
+  retail            605    112   18.5%   15.3% to 21.8%
+  difference                         rate   95% range         verdict
+  online - retail                   +5.2%   +0.7% to +9.3%   clear
+
+Saved to run 4. Finish it with: python run_log.py finish 4 <status> "<conclusion>"
