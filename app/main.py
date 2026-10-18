@@ -20,7 +20,7 @@ from fastapi.responses import RedirectResponse
 from pydantic import BaseModel, ConfigDict, Field
 
 import baseline
-from experiments import m0
+from experiments import m0, m1
 
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -55,6 +55,16 @@ if (MODEL_DIR / "M0.json").exists():
         provisional=True,
         description="M0: every visit gets the choice shares of the 200 build households. "
         "It ignores all inputs, so changing the input does not change its answer.",
+    )
+if (MODEL_DIR / "M1.json").exists():
+    saved = json.loads((MODEL_DIR / "M1.json").read_text(encoding="utf-8"))
+    MODELS["M1"] = Model(
+        predict=m1.predictor(saved),
+        run_id=saved["run_id"],
+        provisional=True,
+        description="M1: household traits only (usual brand, budget, income band, cleaning spend, bathrooms); "
+        "ignores the offer and history. Needs budget, income_band and bathrooms (1 to 3); a missing spend is "
+        "filled like a blank. Its run was inconclusive: it did not clearly beat M0 and lost to the baseline.",
     )
 DEFAULT_MODEL = "baseline"
 ModelName = Enum("ModelName", {name: name for name in MODELS}, type=str)
@@ -142,7 +152,10 @@ def predict(request: PredictRequest, model: ModelName = ModelName(DEFAULT_MODEL)
     ]
     visit = {"channel": request.channel, "visit_number": len(request.history) + 1}
     history = [past.model_dump() for past in request.history]
-    result = chosen.predict(request.household.model_dump(), offers, visit, history)
+    try:
+        result = chosen.predict(request.household.model_dump(), offers, visit, history)
+    except ValueError as error:
+        raise HTTPException(status_code=422, detail=f"{model.value} cannot use this input: {error}")
     probabilities = result["probabilities"]
     return Prediction(
         model=model.value,

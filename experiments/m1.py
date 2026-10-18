@@ -17,7 +17,8 @@ Newton's method. Anything the plan does not cover raises an error instead of gue
 Attaches its outputs to a run already registered in runs.db.
 Run from the project folder: python -m experiments.m1 6
 
-To save M1 fitted on all 200 build households (models/M1.json):
+To save M1 fitted on all 200 build households (models/M1.json), from a finished run
+with status success or inconclusive:
     python -m experiments.m1 save 6
 """
 
@@ -54,14 +55,15 @@ MODEL_FILE = ROOT / "models" / "M1.json"
 
 
 def raw_traits(household, medians):
+    where = f" for {household['household_id']}" if household.get("household_id") else ""
     if household["budget"] not in BUDGETS:
-        raise ValueError(f"Unknown budget {household['budget']!r} for {household.get('household_id')}.")
+        raise ValueError(f"budget must be one of {', '.join(BUDGETS)}, not {household['budget']!r}{where}.")
     if household["income_band"] not in INCOMES:
-        raise ValueError(f"Unknown income band {household['income_band']!r} for {household.get('household_id')}.")
+        raise ValueError(f"income_band must be one of {', '.join(INCOMES)}, not {household['income_band']!r}{where}.")
     bathrooms = str(household["bathrooms"])
+    if bathrooms not in medians:
+        raise ValueError(f"bathrooms must be one seen in training ({', '.join(sorted(medians))}), not {bathrooms}{where}.")
     if household["cleaning_spend_usd"] in ("", None):
-        if bathrooms not in medians:
-            raise ValueError(f"No training median spend for {bathrooms} bathrooms.")
         spend, blank = medians[bathrooms], 1.0
     else:
         spend, blank = float(household["cleaning_spend_usd"]), 0.0
@@ -277,8 +279,8 @@ def run_status(run_id):
 def main():
     if len(sys.argv) == 3 and sys.argv[1] == "save":
         run = run_status(int(sys.argv[2]))
-        if run is None or run["status"] != "success" or not run["name"].startswith("M1"):
-            print(f"Run {sys.argv[2]} is not a finished, successful M1 run.")
+        if run is None or run["status"] not in ("success", "inconclusive") or not run["name"].startswith("M1"):
+            print(f"Run {sys.argv[2]} is not a finished M1 run with status success or inconclusive.")
             return
         save(int(sys.argv[2]))
         return

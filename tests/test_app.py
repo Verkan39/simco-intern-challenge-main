@@ -88,6 +88,30 @@ class AppTests(unittest.TestCase):
         self.assertEqual(second["probabilities"], saved["shares"])
         self.assertEqual((first["model"], first["run_id"], first["provisional"]), ("M0", saved["run_id"], True))
 
+    def test_m1_uses_household_traits_and_rejects_missing_ones(self):
+        from app.main import MODELS, MODEL_DIR
+        if "M1" not in MODELS:
+            self.skipTest("models/M1.json is not present.")
+        import json
+        from experiments import m1
+        saved = json.loads((MODEL_DIR / "M1.json").read_text(encoding="utf-8"))
+        household = {"budget": "middle", "usual_brand": "standard", "income_band": "50k_to_100k",
+                     "cleaning_spend_usd": 13, "bathrooms": 1}
+        result = self.client.post("/predict?model=M1", json={**REQUEST, "household": household}).json()
+        direct = m1.predictor(saved)({**household, "note": ""}, None, None, [])
+        for option, probability in direct["probabilities"].items():
+            self.assertAlmostEqual(result["probabilities"][option], probability)
+        self.assertEqual((result["model"], result["run_id"], result["provisional"]), ("M1", saved["run_id"], True))
+        richer = {**household, "cleaning_spend_usd": 40}
+        changed = self.client.post("/predict?model=M1", json={**REQUEST, "household": richer}).json()
+        self.assertNotEqual(changed["probabilities"], result["probabilities"])
+        blank_spend = self.client.post("/predict?model=M1", json={**REQUEST, "household": {**household, "cleaning_spend_usd": None}})
+        self.assertEqual(blank_spend.status_code, 200)
+        for missing in ({**household, "budget": None}, {**household, "income_band": None}, {**household, "bathrooms": 4}):
+            response = self.client.post("/predict?model=M1", json={**REQUEST, "household": missing})
+            self.assertEqual(response.status_code, 422)
+            self.assertIn("M1 cannot use this input", response.json()["detail"])
+
     def test_runs_can_be_listed_and_inspected(self):
         runs = self.client.get("/runs").json()
         self.assertGreaterEqual(len(runs), 1)
