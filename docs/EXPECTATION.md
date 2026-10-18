@@ -102,3 +102,14 @@ We have very interesting facts coming up from the results:
 i. Online helps entrant because it's competitor stand weaker online, we conclude this as we dont have a realible number for entrant in online channel, but realible negative numbers for standard. This is an extension of one of our conclusions from test 2.
 ii. The message still remains noisy, just that environment has beat low_ordor. 
 iii. The entrant price weight is −0.51 per $1. This quantifies our result from test 2 that there is a direction towards lower price.
+
+MODEL M3:
+
+OBJECTIVE:
+Train the model to include repeat factor
+
+HOW?
+We will build this over M2. Here is a catch, here if the choice is "none", we skip that, assuming that not selecting a product maybe due to stock already present or anything like that. I try to impliment a push-pull idea here, which goes like reward the current choice and punish the previous choice, but punish should be lesser in magnitude than the reward. Model learns both of these from data.
+
+EXPECTATION:
+the score difference between M3 and M2, is the impact of the repeat factor. If we see that bringing this in, is degrading our model, we will get back to M2. I have no intuitions on how this impact will look like.
