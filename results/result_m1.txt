@@ -1,0 +1,79 @@
+visits.csv: 1200 visits, 200 households, 5 folds of 40 households
+M1: 41 weights, L2 penalty 1.0 (starting values not penalised)
+Log loss = mean of -ln(probability given to the actual choice). Lower is better.
+
+  fold   visits         M1        M0  baseline    M1 - M0  M1 - baseline
+  1         240      1.589     1.602     1.555     -0.014         +0.034
+  2         240      1.608     1.599     1.584     +0.009         +0.024
+  3         240      1.608     1.601     1.596     +0.008         +0.012
+  4         240      1.588     1.592     1.574     -0.004         +0.014
+  5         240      1.574     1.598     1.588     -0.024         -0.013
+
+Across folds
+  M1        mean 1.593   sd 0.015   min 1.574   max 1.608
+  M0        mean 1.598   sd 0.004   min 1.592   max 1.602
+  baseline  mean 1.579   sd 0.016   min 1.555   max 1.596
+  M1 - M0       mean -0.005   sd 0.014   min -0.024   max +0.009   (M1 lower in 3 of 5 folds)
+  M1 - baseline mean +0.014   sd 0.018   min -0.013   max +0.034   (M1 lower in 1 of 5 folds)
+
+Supporting measures (all held-out visits)
+  M1        top choice matched 27.3%   entrant expected 21.0%   entrant chosen 21.1%
+  M0        top choice matched 25.2%   entrant expected 21.1%   entrant chosen 21.1%
+  baseline  top choice matched 29.0%   entrant expected 15.9%   entrant chosen 21.1%
+
+M1 fitted on all 200 households (Newton's method converged in 4 steps)
+Spend medians used for blanks, by bathrooms: {'1': 18.0, '2': 24.5, '3': 34.0}
+95% ranges from 200 household resamples; * = range crosses 0, so not a trustworthy reason
+  weight                                 value   95% range
+  start: entrant                         +0.21   -0.06 to +0.45  *
+  start: standard                        +0.06   -0.18 to +0.28  *
+  start: budget                          +0.21   -0.00 to +0.41  *
+  start: scented                         -0.19   -0.39 to -0.02
+  usual brand                            +0.45   +0.27 to +0.62
+  budget=tight -> entrant                -0.08   -0.47 to +0.26  *
+  budget=middle -> entrant               +0.06   -0.24 to +0.30  *
+  budget=flexible -> entrant             +0.03   -0.31 to +0.38  *
+  income=under_50k -> entrant            +0.13   -0.21 to +0.49  *
+  income=50k_to_100k -> entrant          -0.29   -0.59 to +0.03  *
+  income=over_100k -> entrant            +0.17   -0.19 to +0.55  *
+  spend -> entrant                       +0.43   +0.18 to +0.67
+  spend was blank -> entrant             -0.12   -0.66 to +0.44  *
+  bathrooms -> entrant                   -0.15   -0.39 to +0.08  *
+  budget=tight -> standard               -0.26   -0.64 to +0.04  *
+  budget=middle -> standard              +0.19   -0.03 to +0.49  *
+  budget=flexible -> standard            +0.07   -0.26 to +0.43  *
+  income=under_50k -> standard           +0.17   -0.12 to +0.52  *
+  income=50k_to_100k -> standard         -0.22   -0.47 to +0.07  *
+  income=over_100k -> standard           +0.05   -0.30 to +0.43  *
+  spend -> standard                      +0.16   -0.10 to +0.46  *
+  spend was blank -> standard            -0.19   -0.69 to +0.28  *
+  bathrooms -> standard                  +0.08   -0.18 to +0.33  *
+  budget=tight -> budget                 +0.13   -0.15 to +0.39  *
+  budget=middle -> budget                +0.12   -0.13 to +0.36  *
+  budget=flexible -> budget              -0.25   -0.52 to +0.02  *
+  income=under_50k -> budget             +0.01   -0.28 to +0.33  *
+  income=50k_to_100k -> budget           -0.27   -0.55 to +0.03  *
+  income=over_100k -> budget             +0.26   -0.10 to +0.59  *
+  spend -> budget                        +0.09   -0.13 to +0.31  *
+  spend was blank -> budget              -0.24   -0.73 to +0.43  *
+  bathrooms -> budget                    +0.12   -0.11 to +0.34  *
+  budget=tight -> scented                -0.24   -0.54 to +0.03  *
+  budget=middle -> scented               +0.16   -0.07 to +0.40  *
+  budget=flexible -> scented             +0.08   -0.21 to +0.39  *
+  income=under_50k -> scented            +0.07   -0.22 to +0.42  *
+  income=50k_to_100k -> scented          -0.05   -0.28 to +0.23  *
+  income=over_100k -> scented            -0.02   -0.38 to +0.30  *
+  spend -> scented                       +0.16   -0.10 to +0.41  *
+  spend was blank -> scented             +0.03   -0.45 to +0.52  *
+  bathrooms -> scented                   +0.04   -0.19 to +0.28  *
+  Usual brand multiplies an option's odds by 1.57 (baseline's hand-set +0.55: x1.73)
+
+Example households (the model above was fitted on them too)
+  H001: budget=middle, income_band=50k_to_100k, cleaning_spend_usd=13, bathrooms=1, usual_brand=standard
+    standard 27.9%  none 21.7%  budget 19.7%  scented 15.5%  entrant 15.3%
+    reason: standard, compared with an average household: usual brand +0.45, spend -0.20, income=50k_to_100k -0.11.
+  H002: budget=middle, income_band=under_50k, cleaning_spend_usd=7, bathrooms=1, usual_brand=standard
+    standard 31.8%  budget 21.4%  none 19.1%  entrant 14.4%  scented 13.4%
+    reason: standard, compared with an average household: usual brand +0.45, spend -0.33, income=under_50k +0.13.
+
+Saved to run 6. Finish it with: python run_log.py finish 6 <status> "<conclusion>"

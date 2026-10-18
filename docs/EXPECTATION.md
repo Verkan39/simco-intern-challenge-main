@@ -69,3 +69,12 @@ We use multinomial logistic regression, where in we start with weights as 0, and
 
 EXPECTATION:
 I expect this model to beat the baseline model, but I am not very sure about that because baseline also had weights for repeats and many other input parameters, we havent trained on.
+
+WROTE experiments/m1.py
+EVALUATED MODEL with experiments/evaluation.py
+
+RESULT & CONCLUSION:
+The result is stored in results/result_m1.txt
+So I am actually shocked  by the results. The most of final weights are very inconclusive, from the only few trustworthy weights we can, I can conclude that househoulds with greater spend in cleaning, tend to choose the entrant product (okay, might be a useful insight). On checking the log loss, we see M1 was beaten by M0 in 2 out of 5 folds, and beaten by 4 out of 5 folds.
+This looks like our model failed, but at this point I will like to check the hard-coded weights of the baseline model. following which I found, the weight for usual brand in M1 is 0.45 and on the baseline model it is 0.55, which are very close. 
+The other weights of baseline havenot been considered yet in the model, because we have to train our model to two more things, choice and repeat, might be our model fails because it's incomplete.
