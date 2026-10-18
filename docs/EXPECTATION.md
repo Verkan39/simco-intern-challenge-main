@@ -120,3 +120,9 @@ EVALUATED MODEL with experiments/evaluation.py
 RESULT & CONCLUSION:
 The result is stored in results/result_m3.txt
 Hurray again!! M3 beats M2. this means that there is an imapct of repeat factor. now M3 beats baseline in 4 out of 5 folds, which is better than 3 of 5 by M2. However our push-pull was not supported by data, by data, the most recent purchased gets -0.22 and the previous purchase add +0.28, so we see that people return to earlier products, rather than repeating immediately. Rest of our conclusions form M2, stay stable, this is an interesting conclusion.
+
+
+CHECK SET
+
+EXPECTATION:
+There is no data leakage anywhere in my whole process, so I am expecting that my model is generalised and we get similar results on the test dataset as we are getting on training set.
