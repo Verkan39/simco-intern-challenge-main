@@ -1,4 +1,6 @@
-# The starter code and the experiments use only the Python standard library.
+# The starter code uses only the Python standard library.
+# Models from M1 onwards (experiments/m1.py) need:
+numpy==2.2.4
 # The live app (app/main.py) needs:
 fastapi==0.115.6
 uvicorn==0.34.0
