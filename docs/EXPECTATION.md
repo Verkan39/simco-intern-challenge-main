@@ -58,3 +58,14 @@ EVALUATED MODEL with experiments/evaluation.py
 RESULT & CONCLUSION:
 The result is stored in results/results_m0.txt
 From the results, I clearly see that baseline model beats M0. So now what I conclude is a very obvious conclusion that the other parameters are important and we need to consider them, as that is considered by baseline model, even though hard-coded. Might be the assumptions baseline made are true, but there is no certainity of this fact. 
+
+MODEL M1:
+
+OBJECTIVE:
+To add household traits to the model. Currently our model M0 uses just the "choice", which is beaten by the baseline model, which has considered input parameters, so the first few parameters, i would like to add to the model would be around household traits as I assume what the customer chooses greatly depends upon who the customer is.
+
+HOW?
+We use multinomial logistic regression, where in we start with weights as 0, and then adjusted according to slope of the log loss over all training points, until the slope becomes almost 0. The inputs we add are "usual brand", "budget", "income band", "cleaning spend". For evaluation, we use cross validation just as we did in M0
+
+EXPECTATION:
+I expect this model to beat the baseline model, but I am not very sure about that because baseline also had weights for repeats and many other input parameters, we havent trained on.
