@@ -6,26 +6,52 @@ starter baseline on the same held-out households.
 
 Attaches its outputs to a run already registered in runs.db.
 Run from the project folder: python -m experiments.m0 5
+
+To save M0 fitted on all 200 build households for the app (models/M0.json):
+    python -m experiments.m0 save 5
 """
 
 import io
+import json
 import sys
 from collections import Counter
 from contextlib import redirect_stdout
 
 from experiments.evaluation import OPTIONS, cross_validate, fit_starter_baseline, load, spread
-from run_log import connect, record_outputs
+from run_log import ROOT, connect, data_version, record_outputs
 
 
-def fit(train_rows, households):
+MODEL_FILE = ROOT / "models" / "M0.json"
+
+
+def shares_of(train_rows):
     counts = Counter(row["choice"] for row in train_rows)
-    shares = {option: counts[option] / len(train_rows) for option in OPTIONS}
+    return {option: counts[option] / len(train_rows) for option in OPTIONS}
 
+
+def predictor(shares):
     def predict(household, offers, visit, history):
         return {"probabilities": dict(shares),
                 "reason": "M0 ignores all inputs; these are the choice shares in the training households."}
 
     return predict
+
+
+def fit(train_rows, households):
+    return predictor(shares_of(train_rows))
+
+
+def save(run_id):
+    rows, households = load()
+    MODEL_FILE.parent.mkdir(exist_ok=True)
+    MODEL_FILE.write_text(json.dumps({
+        "model": "M0",
+        "run_id": run_id,
+        "fitted_on": f"all {len(households)} build households in visits.csv",
+        "data_version": data_version(["data/visits.csv"]),
+        "shares": shares_of(rows),
+    }, indent=2) + "\n", encoding="utf-8")
+    print(f"Saved {MODEL_FILE.relative_to(ROOT)}")
 
 
 def report(rows, households):
@@ -64,6 +90,15 @@ def report(rows, households):
 
 
 def main():
+    if len(sys.argv) == 3 and sys.argv[1] == "save":
+        run_id = int(sys.argv[2])
+        with connect() as connection:
+            run = connection.execute("SELECT name, status FROM runs WHERE id = ?", (run_id,)).fetchone()
+        if run is None or run["status"] != "success" or not run["name"].startswith("M0"):
+            print(f"Run {run_id} is not a finished, successful M0 run.")
+            return
+        save(run_id)
+        return
     if len(sys.argv) != 2:
         print(__doc__)
         return

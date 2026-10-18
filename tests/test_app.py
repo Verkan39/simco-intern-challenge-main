@@ -75,6 +75,19 @@ class AppTests(unittest.TestCase):
             self.assertEqual(self.client.post("/predict", json=body).status_code, 422)
         self.assertEqual(self.client.post("/predict?model=unknown", json=REQUEST).status_code, 422)
 
+    def test_m0_returns_its_saved_shares_whatever_the_input(self):
+        from app.main import MODELS, MODEL_DIR
+        if "M0" not in MODELS:
+            self.skipTest("models/M0.json is not present.")
+        import json
+        saved = json.loads((MODEL_DIR / "M0.json").read_text(encoding="utf-8"))
+        first = self.client.post("/predict?model=M0", json=REQUEST).json()
+        cheaper = {**REQUEST, "offer": {**REQUEST["offer"], "entrant_price": 3.49}, "history": [{"choice": "entrant"}]}
+        second = self.client.post("/predict?model=M0", json=cheaper).json()
+        self.assertEqual(first["probabilities"], saved["shares"])
+        self.assertEqual(second["probabilities"], saved["shares"])
+        self.assertEqual((first["model"], first["run_id"], first["provisional"]), ("M0", saved["run_id"], True))
+
     def test_runs_can_be_listed_and_inspected(self):
         runs = self.client.get("/runs").json()
         self.assertGreaterEqual(len(runs), 1)

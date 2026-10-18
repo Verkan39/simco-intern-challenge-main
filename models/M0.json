@@ -1,0 +1,15 @@
+{
+  "model": "M0",
+  "run_id": 5,
+  "fitted_on": "all 200 build households in visits.csv",
+  "data_version": {
+    "data/visits.csv": "3e4613fab8db70b23358975885eda3e3767815ff8970cf5c314361821e8dc896"
+  },
+  "shares": {
+    "entrant": 0.21083333333333334,
+    "standard": 0.21333333333333335,
+    "budget": 0.2525,
+    "scented": 0.1525,
+    "none": 0.17083333333333334
+  }
+}

@@ -20,10 +20,12 @@ from fastapi.responses import RedirectResponse
 from pydantic import BaseModel, ConfigDict, Field
 
 import baseline
+from experiments import m0
 
 
 ROOT = Path(__file__).resolve().parent.parent
 DATABASE = ROOT / "runs.db"
+MODEL_DIR = ROOT / "models"
 
 
 @dataclass
@@ -34,7 +36,8 @@ class Model:
     description: str
 
 
-# Each learned model is added here once its run is logged and its weights are committed.
+# Each fitted model is added here once its run is logged and its file in models/ is committed.
+# Provisional means it has not been evaluated on the check set yet.
 MODELS = {
     "baseline": Model(
         predict=baseline.predict,
@@ -44,6 +47,15 @@ MODELS = {
         "and its reason is the last rule that matched, not the largest effect.",
     ),
 }
+if (MODEL_DIR / "M0.json").exists():
+    saved = json.loads((MODEL_DIR / "M0.json").read_text(encoding="utf-8"))
+    MODELS["M0"] = Model(
+        predict=m0.predictor(saved["shares"]),
+        run_id=saved["run_id"],
+        provisional=True,
+        description="M0: every visit gets the choice shares of the 200 build households. "
+        "It ignores all inputs, so changing the input does not change its answer.",
+    )
 DEFAULT_MODEL = "baseline"
 ModelName = Enum("ModelName", {name: name for name in MODELS}, type=str)
 
